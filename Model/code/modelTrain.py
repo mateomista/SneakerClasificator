@@ -34,7 +34,7 @@ train_ds = image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
     subset="training",
-    seed=123,  # Para reproducibilidad
+    seed=123, 
     image_size=IMG_SIZE,
     batch_size=BATCH_SIZE
 )
@@ -48,6 +48,35 @@ val_ds = image_dataset_from_directory(
     batch_size=BATCH_SIZE
 )
 
-print("Número de imágenes de entrenamiento:", train_ds.samples)
-print("Número de imágenes de validación:", val_ds.samples)
-print("Clases encontradas:", train_ds.class_indices)
+model = tf.keras.Sequential([
+    base_model,
+    layers.Dense(256, activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(50, activation='softmax')  # 50 clases
+])
+
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    train_ds,
+    epochs=14,
+    batch_size= BATCH_SIZE,
+)
+
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Train Accuracy', color='#1f77b4', linewidth=2)
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy', color='#ff7f0e', linewidth=2, linestyle='--')
+plt.title('Accuracy durante el Entrenamiento', fontsize=12)
+plt.xlabel('Épocas', fontsize=10)
+plt.ylabel('Accuracy', fontsize=10)
+plt.ylim([0, 1])
+plt.xticks(np.arange(0, 14, step=2))
+plt.grid(True, alpha=0.3)
+plt.legend()
+
+
+model.save('predictSneakersModelPreTrainned.h5')
