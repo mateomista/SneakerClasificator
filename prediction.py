@@ -1,21 +1,13 @@
 from PIL import Image
 import tensorflow as tf
-from tensorflow.keras.models import load_model
-from tensorflow.keras.applications.efficientnet import preprocess_input 
+from tensorflow.keras.models import load_model # type: ignore
+from tensorflow.keras.applications.efficientnet import preprocess_input  # type: ignore
 import numpy as np
 
 model_path = './Model/predictSneakersModelPreTrainned.h5'
 
 def load_trained_model(model_path):
-    """
-    Load a pre-trained TensorFlow model from the specified path.
-    
-    Args:
-        model_path (str): The file path to the saved model.
-        
-    Returns:
-        tf.keras.Model: The loaded Keras model.
-    """
+
     try:
         model = load_model(model_path)
         print(f"Model loaded successfully from {model_path}")
@@ -48,15 +40,7 @@ def predict(model, image):
         return None
     
 def get_prediction_label(predictions):
-    """
-    Get the predicted label from the model's predictions.
-    
-    Args:
-        predictions (np.ndarray): The output from the model's predict method.
-        
-    Returns:
-        int: The index of the predicted class.
-    """
+
     if predictions is None or len(predictions) == 0:
         print("No predictions to process.")
         return None
@@ -65,15 +49,7 @@ def get_prediction_label(predictions):
     return predicted_label
 
 def get_prediction_confidence(predictions):
-    """
-    Get the confidence score of the predicted label.
-    
-    Args:
-        predictions (np.ndarray): The output from the model's predict method.
-        
-    Returns:
-        float: The confidence score of the predicted class.
-    """
+   
     if predictions is None or len(predictions) == 0:
         print("No predictions to process.")
         return None
@@ -84,9 +60,7 @@ def get_prediction_confidence(predictions):
 predicted_model = load_trained_model(model_path)
 if predicted_model is None:
     print("Failed to load the model. Exiting.")
-    
-# Example usage:
-# from PIL import Image 
+
 image = Image.open('./sneakers-dataset/sneakers-dataset/adidas_samba/0005.jpg');
 predictions = predict(predicted_model, image)
 predicted_label = get_prediction_label(predictions)
